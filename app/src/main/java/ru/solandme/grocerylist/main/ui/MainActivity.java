@@ -1,4 +1,4 @@
-package ru.solandme.grocerylist;
+package ru.solandme.grocerylist.main.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.solandme.grocerylist.R;
+import ru.solandme.grocerylist.main.adapters.GroceryAdapter;
 import ru.solandme.grocerylist.model.Grocery;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         groceryRV.setAdapter(groceryAdapter);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference rootRef = database.getReference("grocery-items");
+        DatabaseReference rootRef = database.getReference("grocer");
 
 
     }

@@ -1,4 +1,4 @@
-package ru.solandme.grocerylist;
+package ru.solandme.grocerylist.main.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ru.solandme.grocerylist.R;
 import ru.solandme.grocerylist.model.Grocery;
 
 public class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.ViewHolder> {
@@ -33,10 +34,10 @@ public class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.ViewHold
         return groceryList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private TextView groceryNameField;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             groceryNameField = (TextView) itemView.findViewById(R.id.grocery_name);
         }
