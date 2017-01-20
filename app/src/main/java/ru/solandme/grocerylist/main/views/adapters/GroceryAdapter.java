@@ -1,4 +1,4 @@
-package ru.solandme.grocerylist.main.adapters;
+package ru.solandme.grocerylist.main.views.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

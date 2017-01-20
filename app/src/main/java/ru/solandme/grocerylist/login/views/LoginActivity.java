@@ -1,4 +1,4 @@
-package ru.solandme.grocerylist.login.ui;
+package ru.solandme.grocerylist.login.views;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
