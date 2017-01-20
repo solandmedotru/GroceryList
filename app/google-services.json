@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "906999173462",
+    "firebase_url": "https://grocerylist-f22f3.firebaseio.com",
+    "project_id": "grocerylist-f22f3",
+    "storage_bucket": "grocerylist-f22f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906999173462:android:93120a8651b382dc",
+        "android_client_info": {
+          "package_name": "ru.solandme.grocerylist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906999173462-of1i5k42l3gha8pdqj9nf7kgkhg8nfkb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.solandme.grocerylist",
+            "certificate_hash": "0CA9D720C58E907E378504463729F970A8F596D8"
+          }
+        },
+        {
+          "client_id": "906999173462-h238v3kgsof0ghlof7mmtdv37bk2vd9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvfdDjR8tleVoygFsoyYEvXZVrY3Fz6uI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906999173462-h238v3kgsof0ghlof7mmtdv37bk2vd9l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
