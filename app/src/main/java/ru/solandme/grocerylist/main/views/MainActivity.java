@@ -24,24 +24,25 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference baseRef = database.getReference("shoppingList");
-
     FirebaseListAdapter<ShoppingList> firebaseListAdapter;
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private DrawerLayout mDrawer;
-    private Toolbar toolbar;
-    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         firebaseListAdapter = new FirebaseListAdapter<ShoppingList>(this, ShoppingList.class, android.R.layout.two_line_list_item, baseRef) {
             @Override
@@ -79,9 +80,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
+                mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }
