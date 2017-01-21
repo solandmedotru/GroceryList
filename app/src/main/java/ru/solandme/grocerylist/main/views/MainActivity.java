@@ -18,10 +18,8 @@ import ru.solandme.grocerylist.main.presenters.MainPresenter;
 import ru.solandme.grocerylist.main.views.adapters.GroceryAdapter;
 import ru.solandme.grocerylist.model.Grocery;
 
-public class MainActivity extends AppCompatActivity implements IMainView {
-    private RecyclerView groceryRV;
+public class MainActivity extends AppCompatActivity implements IMainView, View.OnClickListener {
     private GroceryAdapter groceryAdapter;
-    private Button btnAddItem;
     private EditText groceryAddText;
 
     private List<Grocery> groceries = new ArrayList<>();
@@ -34,24 +32,16 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         mainPresenter = new MainPresenter(this, groceries);
 
         groceryAddText = (EditText) findViewById(R.id.grocery_add_text);
-        btnAddItem = (Button) findViewById(R.id.btnAdd);
-        btnAddItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String item = groceryAddText.getText().toString().trim();
-                Grocery grocery = new Grocery(item);
-
-                mainPresenter.onAddItem(grocery);
-            }
-        });
-
-        groceryRV = (RecyclerView) findViewById(R.id.grocery_rv);
+        Button btnAddItem = (Button) findViewById(R.id.btnAdd);
+        btnAddItem.setOnClickListener(this);
+        RecyclerView groceryRV = (RecyclerView) findViewById(R.id.grocery_rv);
         groceryRV.setLayoutManager(new LinearLayoutManager(this));
+
 
         groceryAdapter = new GroceryAdapter(groceries);
         groceryRV.setAdapter(groceryAdapter);
 
-        mainPresenter.receiveRequest();
+        mainPresenter.refreshGroceries();
     }
 
     @Override
@@ -65,7 +55,14 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     }
 
     @Override
-    public void addItem(Grocery item) {
-        mainPresenter.onAddItem(item);
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.btnAdd:
+                String item = groceryAddText.getText().toString().trim();
+                Grocery grocery = new Grocery(item);
+                mainPresenter.onAddItem(grocery);
+                break;
+        }
     }
 }

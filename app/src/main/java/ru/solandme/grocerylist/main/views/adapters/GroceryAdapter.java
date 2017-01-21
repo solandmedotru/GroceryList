@@ -26,7 +26,9 @@ public class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.groceryNameField.setText(groceryList.get(position).getName());
+        if (null != groceryList.get(position)) {
+            holder.groceryNameField.setText(groceryList.get(position).getName());
+        }
     }
 
     @Override

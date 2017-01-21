@@ -18,12 +18,12 @@ public class MainPresenter implements IMainPresenter, MainInteractorListener {
     }
 
     @Override
-    public void receiveRequest() {
-        interactor.receiveRequest();
+    public void refreshGroceries() {
+        interactor.refreshGroceries();
     }
 
     @Override
-    public void onError(String message) {
+    public void onMessage(String message) {
         mainView.showMessage(message);
     }
 
@@ -37,13 +37,4 @@ public class MainPresenter implements IMainPresenter, MainInteractorListener {
         mainView.updateGroceries();
     }
 
-    @Override
-    public void onReceivedError(String error) {
-        mainView.showMessage(error);
-    }
-
-    @Override
-    public void onComplite(String message) {
-        mainView.showMessage(message);
-    }
 }

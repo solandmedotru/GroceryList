@@ -3,6 +3,9 @@ package ru.solandme.grocerylist.model;
 public class Grocery {
     private String name;
 
+    public Grocery() {
+    }
+
     public Grocery(String name) {
         this.name = name;
     }
