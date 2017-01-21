@@ -1,89 +1,70 @@
 package ru.solandme.grocerylist.main.views;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ru.solandme.grocerylist.R;
-import ru.solandme.grocerylist.main.presenters.IMainPresenter;
-import ru.solandme.grocerylist.main.presenters.MainPresenter;
-import ru.solandme.grocerylist.model.Grocery;
+import ru.solandme.grocerylist.model.ShoppingList;
 
-public class MainActivity extends AppCompatActivity implements IMainView, View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference rootRef = database.getReference("grocers");
-    FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter;
+    DatabaseReference baseRef = database.getReference("shoppingList");
 
-    private EditText groceryAddText;
-
-    private IMainPresenter mainPresenter;
+    FirebaseListAdapter<ShoppingList> firebaseListAdapter;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainPresenter = new MainPresenter(this);
 
-        groceryAddText = (EditText) findViewById(R.id.grocery_add_text);
-        Button btnAddItem = (Button) findViewById(R.id.btnAdd);
-        btnAddItem.setOnClickListener(this);
-        RecyclerView groceryRV = (RecyclerView) findViewById(R.id.grocery_rv);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        groceryRV.setLayoutManager(layoutManager);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        groceryAdapter = new FirebaseRecyclerAdapter<Grocery, GroceryViewHolder>(
-                Grocery.class,
-                R.layout.grocery_row,
-                GroceryViewHolder.class,
-                rootRef
-        ) {
+        firebaseListAdapter = new FirebaseListAdapter<ShoppingList>(this, ShoppingList.class, android.R.layout.two_line_list_item, baseRef) {
             @Override
-            protected void populateViewHolder(final GroceryViewHolder viewHolder, Grocery model, int position) {
-                viewHolder.setGroceryName(model.getName());
-
-                viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        int position = viewHolder.getAdapterPosition();
-                        groceryAdapter.getRef(position).removeValue();
-                        return true;
-                    }
-                });
+            protected void populateView(View view, ShoppingList shoppingList, int position) {
+                ((TextView) view.findViewById(android.R.id.text1)).setText(shoppingList.getName());
+                ((TextView) view.findViewById(android.R.id.text2)).setText(shoppingList.getOwner());
             }
         };
-        groceryRV.setAdapter(groceryAdapter);
-    }
 
-    @Override
-    public void showMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(firebaseListAdapter);
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Fragment fragment = new MainFragment();
+                Bundle args = new Bundle();
+                String key = firebaseListAdapter.getRef(position).getKey();
+                args.putString("key", key);
+                fragment.setArguments(args);
 
-    @Override
-    public void onClick(View view) {
+                // Insert the fragment by replacing any existing fragment
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, fragment)
+                        .commit();
 
-        switch (view.getId()) {
-            case R.id.btnAdd:
-                String item = groceryAddText.getText().toString().trim();
-                Grocery grocery = new Grocery(item);
-                mainPresenter.onAddItem(grocery);
-                break;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        groceryAdapter.cleanup();
+                // Highlight the selected item, update the title, and close the drawer
+                mDrawerList.setItemChecked(position, true);
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
     }
 }
+
+
