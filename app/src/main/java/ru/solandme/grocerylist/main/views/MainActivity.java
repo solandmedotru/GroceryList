@@ -9,6 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +20,12 @@ import ru.solandme.grocerylist.R;
 import ru.solandme.grocerylist.main.presenters.IMainPresenter;
 import ru.solandme.grocerylist.main.presenters.MainPresenter;
 import ru.solandme.grocerylist.main.views.adapters.GroceryAdapter;
+import ru.solandme.grocerylist.main.views.adapters.GroceryViewHolder;
 import ru.solandme.grocerylist.model.Grocery;
 
 public class MainActivity extends AppCompatActivity implements IMainView, View.OnClickListener {
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference rootRef = database.getReference("grocers");
     private GroceryAdapter groceryAdapter;
     private EditText groceryAddText;
 
@@ -38,7 +45,20 @@ public class MainActivity extends AppCompatActivity implements IMainView, View.O
         groceryRV.setLayoutManager(new LinearLayoutManager(this));
 
 
-        groceryAdapter = new GroceryAdapter(groceries);
+        FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter = new FirebaseRecyclerAdapter<Grocery, GroceryViewHolder>(
+                Grocery.class,
+                R.layout.grocery_row,
+                GroceryViewHolder.class,
+                //referencing the node where we want the database to store the data from our Object
+                rootRef
+        ) {
+            @Override
+            protected void populateViewHolder(GroceryViewHolder viewHolder, Grocery model, int position) {
+                viewHolder.groceryNameField.setText(model.getName());
+            }
+        };
+
+//        groceryAdapter = new GroceryAdapter(groceries);
         groceryRV.setAdapter(groceryAdapter);
 
         mainPresenter.refreshGroceries();

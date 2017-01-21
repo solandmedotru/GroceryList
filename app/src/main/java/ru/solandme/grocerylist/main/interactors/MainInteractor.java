@@ -1,12 +1,8 @@
 package ru.solandme.grocerylist.main.interactors;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -26,50 +22,50 @@ public class MainInteractor {
     }
 
     public void refreshGroceries() {
-        rootRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<List<Grocery>> t = new GenericTypeIndicator<List<Grocery>>() {
-                };
-                groceries.clear();
-                groceries.addAll(dataSnapshot.getValue(t));
-                listener.onGroceriesReceived();
-            }
+//        rootRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                GenericTypeIndicator<List<Grocery>> t = new GenericTypeIndicator<List<Grocery>>() {
+//                };
+//                groceries.clear();
+//                groceries.addAll(dataSnapshot.getValue(t));
+//                listener.onGroceriesReceived();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        rootRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                listener.onGroceriesReceived();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                int key = Integer.parseInt(dataSnapshot.getKey());
-                groceries.remove(key);
-                listener.onGroceriesReceived();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        rootRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                listener.onGroceriesReceived();
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                int key = Integer.parseInt(dataSnapshot.getKey());
+//                groceries.remove(key);
+//                listener.onGroceriesReceived();
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     public void addItemToList(Grocery item) {
