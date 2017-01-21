@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, View.O
         Button btnAddItem = (Button) findViewById(R.id.btnAdd);
         btnAddItem.setOnClickListener(this);
         RecyclerView groceryRV = (RecyclerView) findViewById(R.id.grocery_rv);
-        groceryRV.setLayoutManager(new LinearLayoutManager(this));
-
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        groceryRV.setLayoutManager(layoutManager);
 
         groceryAdapter = new FirebaseRecyclerAdapter<Grocery, GroceryViewHolder>(
                 Grocery.class,
@@ -48,18 +48,15 @@ public class MainActivity extends AppCompatActivity implements IMainView, View.O
                 rootRef
         ) {
             @Override
-            protected void populateViewHolder(final GroceryViewHolder viewHolder, Grocery model, final int position) {
+            protected void populateViewHolder(final GroceryViewHolder viewHolder, Grocery model, int position) {
                 viewHolder.setGroceryName(model.getName());
 
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        try {
-                            int position = viewHolder.getAdapterPosition();
-                            groceryAdapter.getRef(position).removeValue();
-                        } catch (NullPointerException e) {
-                            Toast.makeText(getApplicationContext(), "No Items", Toast.LENGTH_SHORT).show();
-                        }
+                    public boolean onLongClick(View view) {
+                        int position = viewHolder.getAdapterPosition();
+                        groceryAdapter.getRef(position).removeValue();
+                        return true;
                     }
                 });
             }

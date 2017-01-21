@@ -15,6 +15,7 @@ public class MainInteractor {
 
     public MainInteractor(MainInteractorListener listener) {
         this.listener = listener;
+        rootRef.keepSynced(true);
     }
 
 
