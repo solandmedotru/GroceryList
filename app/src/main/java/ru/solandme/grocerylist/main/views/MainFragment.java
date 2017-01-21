@@ -24,7 +24,7 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter;
-    DatabaseReference rootRef = database.getReference("shoppingList/grocers");
+    DatabaseReference rootRef;
 
 
     private EditText groceryAddText;
@@ -37,7 +37,11 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, null);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        String key = getArguments().getString("key");
+        if (key != null) {
+            rootRef = database.getReference(key);
+        }
 
         groceryAddText = (EditText) getView().findViewById(R.id.grocery_add_text);
         Button btnAddItem = (Button) getView().findViewById(R.id.btnAdd);
