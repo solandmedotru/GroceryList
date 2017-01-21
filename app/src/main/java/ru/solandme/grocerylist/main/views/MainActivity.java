@@ -13,30 +13,25 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ru.solandme.grocerylist.R;
 import ru.solandme.grocerylist.main.presenters.IMainPresenter;
 import ru.solandme.grocerylist.main.presenters.MainPresenter;
-import ru.solandme.grocerylist.main.views.adapters.GroceryAdapter;
-import ru.solandme.grocerylist.main.views.adapters.GroceryViewHolder;
 import ru.solandme.grocerylist.model.Grocery;
 
 public class MainActivity extends AppCompatActivity implements IMainView, View.OnClickListener {
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference rootRef = database.getReference("grocers");
-    private GroceryAdapter groceryAdapter;
+
     private EditText groceryAddText;
 
-    private List<Grocery> groceries = new ArrayList<>();
     private IMainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainPresenter = new MainPresenter(this, groceries);
+        mainPresenter = new MainPresenter(this);
 
         groceryAddText = (EditText) findViewById(R.id.grocery_add_text);
         Button btnAddItem = (Button) findViewById(R.id.btnAdd);
@@ -49,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements IMainView, View.O
                 Grocery.class,
                 R.layout.grocery_row,
                 GroceryViewHolder.class,
-                //referencing the node where we want the database to store the data from our Object
                 rootRef
         ) {
             @Override
@@ -57,21 +51,12 @@ public class MainActivity extends AppCompatActivity implements IMainView, View.O
                 viewHolder.groceryNameField.setText(model.getName());
             }
         };
-
-//        groceryAdapter = new GroceryAdapter(groceries);
         groceryRV.setAdapter(groceryAdapter);
-
-        mainPresenter.refreshGroceries();
     }
 
     @Override
     public void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void updateGroceries() {
-        groceryAdapter.notifyDataSetChanged();
     }
 
     @Override
