@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, View.O
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference rootRef = database.getReference("grocers");
+    FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter;
 
     private EditText groceryAddText;
 
@@ -40,15 +41,27 @@ public class MainActivity extends AppCompatActivity implements IMainView, View.O
         groceryRV.setLayoutManager(new LinearLayoutManager(this));
 
 
-        FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter = new FirebaseRecyclerAdapter<Grocery, GroceryViewHolder>(
+        groceryAdapter = new FirebaseRecyclerAdapter<Grocery, GroceryViewHolder>(
                 Grocery.class,
                 R.layout.grocery_row,
                 GroceryViewHolder.class,
                 rootRef
         ) {
             @Override
-            protected void populateViewHolder(GroceryViewHolder viewHolder, Grocery model, int position) {
-                viewHolder.groceryNameField.setText(model.getName());
+            protected void populateViewHolder(final GroceryViewHolder viewHolder, Grocery model, final int position) {
+                viewHolder.setGroceryName(model.getName());
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            int position = viewHolder.getAdapterPosition();
+                            groceryAdapter.getRef(position).removeValue();
+                        } catch (NullPointerException e) {
+                            Toast.makeText(getApplicationContext(), "No Items", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         };
         groceryRV.setAdapter(groceryAdapter);
@@ -69,5 +82,11 @@ public class MainActivity extends AppCompatActivity implements IMainView, View.O
                 mainPresenter.onAddItem(grocery);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        groceryAdapter.cleanup();
     }
 }
