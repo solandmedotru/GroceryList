@@ -22,15 +22,18 @@ import ru.solandme.grocerylist.model.Grocery;
 
 public class MainFragment extends Fragment implements IMainView, View.OnClickListener {
 
+    public static final String SHOPPING_LISTS = "shoppingLists";
+    public static final String GROCERIES_LIST = "groceriesList";
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter;
-    DatabaseReference rootRef = database.getReference("shoppingLists");
+    DatabaseReference keyRef = database.getReference(SHOPPING_LISTS);
+    DatabaseReference dataRef = database.getReference(GROCERIES_LIST);
 
     private IMainPresenter mainPresenter;
 
     private EditText groceryAddText;
 
-    String key;
+    String listId;
 
     public MainFragment() {
         mainPresenter = new MainPresenter(this);
@@ -40,9 +43,9 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        key = getArguments().getString("key");
-        if (key != null) {
-            rootRef = rootRef.child(key);
+        listId = getArguments().getString("listId");
+        if (listId != null) {
+            dataRef = database.getReference(GROCERIES_LIST).child(listId);
         }
 
         groceryAddText = (EditText) view.findViewById(R.id.grocery_add_text);
@@ -56,7 +59,7 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
                 Grocery.class,
                 R.layout.grocery_row,
                 GroceryViewHolder.class,
-                rootRef
+                dataRef
         ) {
             @Override
             protected void populateViewHolder(final GroceryViewHolder viewHolder, Grocery model, int position) {
@@ -87,8 +90,8 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
         switch (view.getId()) {
             case R.id.btnAdd:
                 String item = groceryAddText.getText().toString().trim();
-                Grocery grocery = new Grocery(item);
-                mainPresenter.onAddItem(grocery, key);
+                Grocery grocery = new Grocery(item, listId);
+                mainPresenter.onAddItem(grocery, grocery.getListID());
                 break;
         }
     }

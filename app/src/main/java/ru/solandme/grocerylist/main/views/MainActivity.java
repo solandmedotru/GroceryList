@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import ru.solandme.grocerylist.R;
 import ru.solandme.grocerylist.model.ShoppingList;
 
-public class MainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements ListView.OnItemClickListener, View.OnClickListener, AddListDialog.AddListDialogListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
+        initFBAdapter();
 
         if (savedInstanceState == null) {
             replaceFragment("home");
@@ -48,11 +49,15 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        TextView addList = (TextView) findViewById(R.id.addList);
+        addList.setOnClickListener(this);
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+    }
 
+    private void initFBAdapter() {
         firebaseListAdapter = new FirebaseListAdapter<ShoppingList>(this, ShoppingList.class, android.R.layout.two_line_list_item, rootRef) {
             @Override
             protected void populateView(View view, ShoppingList shoppingList, int position) {
@@ -65,27 +70,27 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         mDrawerList.setOnItemClickListener(this);
     }
 
-    private void replaceFragment(String key) {
+    private void replaceFragment(String listId) {
         Fragment fragment = new MainFragment();
         Bundle args = new Bundle();
-        args.putString("key", key);
+        args.putString("listId", listId.trim());
         fragment.setArguments(args);
-        Log.d(TAG, "onItemClick: " + key);
+        Log.d(TAG, "onItemClick: " + listId);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment, key)
+                .replace(R.id.content_frame, fragment)
                 .commit();
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        String key = firebaseListAdapter.getRef(position).getKey();
+        String listId = firebaseListAdapter.getRef(position).getKey();
 
-        replaceFragment(key);
+        replaceFragment(listId);
 
         mDrawerList.setItemChecked(position, true);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     @Override
@@ -101,6 +106,22 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     protected void onDestroy() {
         super.onDestroy();
         firebaseListAdapter.cleanup();
+    }
+
+    @Override
+    public void onClick(View view) {
+        showEditDialog();
+    }
+
+    private void showEditDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        AddListDialog editNameDialogFragment = AddListDialog.newInstance("Add list");
+        editNameDialogFragment.show(fm, "fragment_edit_name");
+    }
+
+    @Override
+    public void onFinishAddListDialog(ShoppingList shoppingList) {
+        rootRef.push().setValue(shoppingList);
     }
 }
 

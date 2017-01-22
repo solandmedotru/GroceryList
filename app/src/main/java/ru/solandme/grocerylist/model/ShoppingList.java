@@ -1,11 +1,15 @@
 package ru.solandme.grocerylist.model;
 
 public class ShoppingList {
-    String name;
-    String owner;
-    String timeStamp;
+    private String name;
+    private String owner;
 
     public ShoppingList() {
+    }
+
+    public ShoppingList(String name, String owner) {
+        this.name = name;
+        this.owner = owner;
     }
 
     public String getName() {
@@ -22,13 +26,5 @@ public class ShoppingList {
 
     public void setOwner(String owner) {
         this.owner = owner;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
     }
 }
