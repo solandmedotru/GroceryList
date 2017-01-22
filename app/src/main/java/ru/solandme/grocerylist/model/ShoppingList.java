@@ -7,9 +7,9 @@ public class ShoppingList {
     public ShoppingList() {
     }
 
-    public ShoppingList(String name, String owner) {
+    public ShoppingList(String name) {
         this.name = name;
-        this.owner = owner;
+        this.owner = "Anonymous";
     }
 
     public String getName() {

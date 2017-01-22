@@ -2,14 +2,22 @@ package ru.solandme.grocerylist.model;
 
 public class Grocery {
     private String name;
-    private String ListID;
+    private String listID;
+    private String owner;
 
     public Grocery() {
     }
 
     public Grocery(String name, String listID) {
         this.name = name;
-        ListID = listID;
+        this.listID = listID;
+        this.owner = "Anonymous";
+    }
+
+    public Grocery(String name, String listID, String owner) {
+        this.name = name;
+        this.listID = listID;
+        this.owner = owner;
     }
 
     public String getName() {
@@ -21,10 +29,18 @@ public class Grocery {
     }
 
     public String getListID() {
-        return ListID;
+        return listID;
     }
 
     public void setListID(String listID) {
-        ListID = listID;
+        this.listID = listID;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

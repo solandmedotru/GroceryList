@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
     @Override
     public void onClick(View view) {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         showEditDialog();
     }
 
@@ -121,7 +123,12 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
     @Override
     public void onFinishAddListDialog(ShoppingList shoppingList) {
-        rootRef.push().setValue(shoppingList);
+        rootRef.push().setValue(shoppingList, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                replaceFragment(databaseReference.getKey());
+            }
+        });
     }
 }
 

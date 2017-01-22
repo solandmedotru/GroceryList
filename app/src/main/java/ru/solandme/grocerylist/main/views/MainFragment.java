@@ -94,6 +94,7 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
                 mainPresenter.onAddItem(grocery, grocery.getListID());
                 break;
         }
+        groceryAddText.setText("");
     }
 
     @Override
