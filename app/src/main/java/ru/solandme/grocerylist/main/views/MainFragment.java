@@ -24,11 +24,13 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter;
-    DatabaseReference rootRef;
+    DatabaseReference rootRef = database.getReference("shoppingLists");
 
+    private IMainPresenter mainPresenter;
 
     private EditText groceryAddText;
-    private IMainPresenter mainPresenter;
+
+    String key;
 
     public MainFragment() {
         mainPresenter = new MainPresenter(this);
@@ -38,15 +40,15 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        String key = getArguments().getString("key");
+        key = getArguments().getString("key");
         if (key != null) {
-            rootRef = database.getReference(key);
+            rootRef = rootRef.child(key);
         }
 
-        groceryAddText = (EditText) getView().findViewById(R.id.grocery_add_text);
-        Button btnAddItem = (Button) getView().findViewById(R.id.btnAdd);
+        groceryAddText = (EditText) view.findViewById(R.id.grocery_add_text);
+        Button btnAddItem = (Button) view.findViewById(R.id.btnAdd);
         btnAddItem.setOnClickListener(this);
-        RecyclerView groceryRV = (RecyclerView) getView().findViewById(R.id.grocery_rv);
+        RecyclerView groceryRV = (RecyclerView) view.findViewById(R.id.grocery_rv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         groceryRV.setLayoutManager(layoutManager);
 
@@ -86,7 +88,7 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
             case R.id.btnAdd:
                 String item = groceryAddText.getText().toString().trim();
                 Grocery grocery = new Grocery(item);
-                mainPresenter.onAddItem(grocery);
+                mainPresenter.onAddItem(grocery, key);
                 break;
         }
     }

@@ -10,18 +10,19 @@ public class MainInteractor {
 
     private static final String TAG = MainInteractor.class.getSimpleName();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference rootRef = database.getReference("grocers");
+    DatabaseReference rootRef = database.getReference("shoppingLists");
     MainInteractorListener listener;
+    String key = "home";
 
     public MainInteractor(MainInteractorListener listener) {
         this.listener = listener;
-        rootRef.keepSynced(true);
+        rootRef.child(key).keepSynced(true);
     }
 
 
-    public void addItemToList(Grocery item) {
+    public void addItemToList(Grocery item, String key) {
 
-        rootRef.push().setValue(item, new DatabaseReference.CompletionListener() {
+        rootRef.child(key).push().setValue(item, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
