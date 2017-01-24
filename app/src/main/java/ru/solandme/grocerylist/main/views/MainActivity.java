@@ -8,7 +8,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -31,15 +30,16 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private String lastOpenedShoppingList = "home";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initUI();
         initFBAdapter();
+        initUI();
 
         if (savedInstanceState == null) {
-            replaceFragment("home");
+            replaceFragment(lastOpenedShoppingList);
         }
     }
 
@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+        mDrawerList.setAdapter(firebaseListAdapter);
+        mDrawerList.setOnItemClickListener(this);
     }
 
     private void initFBAdapter() {
@@ -66,9 +68,6 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
                 ((TextView) view.findViewById(android.R.id.text2)).setText(shoppingList.getOwner());
             }
         };
-
-        mDrawerList.setAdapter(firebaseListAdapter);
-        mDrawerList.setOnItemClickListener(this);
     }
 
     private void replaceFragment(String listId) {
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         Bundle args = new Bundle();
         args.putString("listId", listId.trim());
         fragment.setArguments(args);
-        Log.d(TAG, "onItemClick: " + listId);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -104,12 +102,6 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        firebaseListAdapter.cleanup();
-    }
-
-    @Override
     public void onClick(View view) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         showEditDialog();
@@ -129,6 +121,12 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
                 replaceFragment(databaseReference.getKey());
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        firebaseListAdapter.cleanup();
     }
 }
 

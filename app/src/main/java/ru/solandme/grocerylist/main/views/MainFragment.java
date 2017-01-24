@@ -24,16 +24,16 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
 
     public static final String SHOPPING_LISTS = "shoppingLists";
     public static final String GROCERIES_LIST = "groceriesList";
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter;
-    DatabaseReference keyRef = database.getReference(SHOPPING_LISTS);
-    DatabaseReference dataRef = database.getReference(GROCERIES_LIST);
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseRecyclerAdapter<Grocery, GroceryViewHolder> groceryAdapter;
+    private DatabaseReference keyRef = database.getReference(SHOPPING_LISTS);
+    private DatabaseReference dataRef = database.getReference(GROCERIES_LIST);
 
     private IMainPresenter mainPresenter;
 
     private EditText groceryAddText;
 
-    String listId;
+    private String listId;
 
     public MainFragment() {
         mainPresenter = new MainPresenter(this);
@@ -43,6 +43,7 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+
         listId = getArguments().getString("listId");
         if (listId != null) {
             dataRef = database.getReference(GROCERIES_LIST).child(listId);
@@ -91,7 +92,7 @@ public class MainFragment extends Fragment implements IMainView, View.OnClickLis
             case R.id.btnAdd:
                 String item = groceryAddText.getText().toString().trim();
                 Grocery grocery = new Grocery(item, listId);
-                mainPresenter.onAddItem(grocery, grocery.getListID());
+                mainPresenter.addItem(grocery, grocery.getListID());
                 break;
         }
         groceryAddText.setText("");

@@ -21,7 +21,7 @@ public class MainPresenter implements IMainPresenter, MainInteractorListener {
     }
 
     @Override
-    public void onAddItem(Grocery item, String listId) {
+    public void addItem(Grocery item, String listId) {
         interactor.addItemToList(item, listId);
     }
 }

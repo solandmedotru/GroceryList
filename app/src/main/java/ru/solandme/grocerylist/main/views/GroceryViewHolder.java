@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import ru.solandme.grocerylist.R;
 
-
 public class GroceryViewHolder extends RecyclerView.ViewHolder {
     View itemView;
     public TextView groceryNameField;
