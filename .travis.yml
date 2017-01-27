@@ -16,9 +16,9 @@ android:
     - extra-android-m2repository
     - addon-google_apis-google-25
 
-    licenses:
-      - android-sdk-license-.+
-      - '.+'
+  licenses:
+    - android-sdk-license-.+
+    - '.+'
 
   before_script:
     # Create and start emulator
