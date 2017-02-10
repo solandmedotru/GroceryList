@@ -15,8 +15,6 @@ import ru.solandme.grocerylist.model.ShoppingList;
 public class AddListDialog extends DialogFragment implements View.OnClickListener {
 
     private EditText addName;
-    private Button btnAdd;
-    private Button btnCancel;
 
     public AddListDialog() {
     }
@@ -44,9 +42,10 @@ public class AddListDialog extends DialogFragment implements View.OnClickListene
         super.onViewCreated(view, savedInstanceState);
 
         addName = (EditText) view.findViewById(R.id.txt_list_name);
-        btnAdd = (Button) view.findViewById(R.id.btn_add);
+        Button btnAdd = (Button) view.findViewById(R.id.btn_add);
         btnAdd.setOnClickListener(this);
-        btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(this);
     }
 
     @Override
@@ -57,6 +56,8 @@ public class AddListDialog extends DialogFragment implements View.OnClickListene
                 onShoppingListCreated(name);
                 dismiss();
                 break;
+            case R.id.btn_cancel:
+                dismiss();
             default:
                 dismiss();
         }

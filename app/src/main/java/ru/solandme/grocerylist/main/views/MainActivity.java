@@ -23,7 +23,6 @@ import ru.solandme.grocerylist.model.ShoppingList;
 
 public class MainActivity extends AppCompatActivity implements ListView.OnItemClickListener, View.OnClickListener, AddListDialog.AddListDialogListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference rootRef = database.getReference("shoppingLists");
     FirebaseListAdapter<ShoppingList> firebaseListAdapter;
@@ -31,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String lastOpenedShoppingList = "home";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +45,12 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
     private void initUI() {
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        TextView addList = (TextView) findViewById(R.id.addList);
+        final TextView addList = (TextView) findViewById(R.id.addList);
         addList.setOnClickListener(this);
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
