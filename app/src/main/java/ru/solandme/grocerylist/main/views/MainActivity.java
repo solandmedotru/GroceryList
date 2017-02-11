@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private String lastOpenedShoppingList = "home";
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         initUI();
 
         if (savedInstanceState == null) {
-            replaceFragment(lastOpenedShoppingList);
+            replaceFragment(getLastOpenedShoppingList());
         }
     }
 
@@ -127,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     protected void onDestroy() {
         super.onDestroy();
         firebaseListAdapter.cleanup();
+    }
+
+    public String getLastOpenedShoppingList() {
+        return "home";
     }
 }
 
